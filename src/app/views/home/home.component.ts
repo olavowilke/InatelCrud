@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
         weight: null,
         symbol: ''
       } : {
+        id: element.id,
         position: element.position,
         name: element.name,
         weight: element.weight,
@@ -48,13 +49,18 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        if (this.dataSource.map(value => value.position).includes(result.position)) {
-          this.dataSource[result.position - 1] = result;
-          this.table.renderRows();
+        if (this.dataSource.map(value => value.id).includes(result.id)) {
+          this.periodicElementService.editElement(result)
+            .subscribe((data: PeriodicElement) => {
+              const index = this.dataSource.findIndex(value => value.id === data.id);
+
+              this.dataSource[index] = data;
+              this.table.renderRows();
+            });
         } else {
           this.periodicElementService.createElement(result)
             .subscribe((data: PeriodicElement) => {
-              this.dataSource.push(result);
+              this.dataSource.push(data);
               this.table.renderRows();
             })
         }
@@ -62,8 +68,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  deleteElement(position: number): void {
-    this.dataSource = this.dataSource.filter(value => value.position !== position)
+  deleteElement(id: number): void {
+    this.periodicElementService.deleteElement(id)
+      .subscribe(() => {
+        this.dataSource = this.dataSource.filter(value => value.id !== id)
+      })
   }
 
   editElement(element: PeriodicElement): void {
