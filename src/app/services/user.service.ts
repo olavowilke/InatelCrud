@@ -2,16 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {User} from "../models/UserDTO";
+import {GetAllUsersDto} from "../models/GetAllUsersDto";
 
 @Injectable()
 export class UserService {
-  crudApiUrl = 'https://reqres.in/api/'
+  crudApiUrl = 'api/users'
 
   constructor(private http: HttpClient) {
   }
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.crudApiUrl);
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<any>(this.crudApiUrl);
   }
 
   createUser(element: User): Observable<User> {
