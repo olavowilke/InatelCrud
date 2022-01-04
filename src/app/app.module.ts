@@ -12,11 +12,12 @@ import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
-import { ElementDialogComponent } from './shared/element-dialog/element-dialog.component';
+import { UserDialogComponent } from './shared/user-dialog/user-dialog.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import {UserService} from "./services/user.service";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import {HttpClientModule} from "@angular/common/http";
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    ElementDialogComponent
+    UserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -38,9 +39,9 @@ import {HttpClientModule} from "@angular/common/http";
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

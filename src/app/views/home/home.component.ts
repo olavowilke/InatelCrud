@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ElementDialogComponent} from "../../shared/element-dialog/element-dialog.component";
+import {UserDialogComponent} from "../../shared/user-dialog/user-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatTable} from "@angular/material/table";
-import {PeriodicElement} from "../../models/PeriodicElementDTO";
-import {PeriodicElementService} from "../../services/periodicElement.service";
+import {User} from "../../models/UserDTO";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-home',
@@ -14,15 +14,15 @@ import {PeriodicElementService} from "../../services/periodicElement.service";
 export class HomeComponent implements OnInit {
   @ViewChild(MatTable)
   table!: MatTable<any>
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'action'];
-  dataSource!: PeriodicElement[];
+  displayedColumns: string[] = ['name', 'job', 'action'];
+  dataSource!: User[];
 
   constructor(
     public dialog: MatDialog,
-    public periodicElementService: PeriodicElementService
+    public userService: UserService
   ) {
-    this.periodicElementService.getElements()
-      .subscribe((data: PeriodicElement[]) => {
+    this.userService.getUsers()
+      .subscribe((data: User[]) => {
         this.dataSource = data;
       });
   }
@@ -30,36 +30,31 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog(element: PeriodicElement | null): void {
-    const dialogRef = this.dialog.open(ElementDialogComponent, {
+  openDialog(user: User | null): void {
+    const dialogRef = this.dialog.open(UserDialogComponent, {
       width: '250px',
-      data: element === null ? {
-        position: null,
-        name: '',
-        weight: null,
-        symbol: ''
+      data: user === null ? {
+        job: '',
+        name: ''
       } : {
-        id: element.id,
-        position: element.position,
-        name: element.name,
-        weight: element.weight,
-        symbol: element.symbol
+        id: user.id,
+        job: user.job,
+        name: user.name
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (this.dataSource.map(value => value.id).includes(result.id)) {
-          this.periodicElementService.editElement(result)
-            .subscribe((data: PeriodicElement) => {
+          this.userService.editUser(result)
+            .subscribe((data: User) => {
               const index = this.dataSource.findIndex(value => value.id === data.id);
-
               this.dataSource[index] = data;
               this.table.renderRows();
             });
         } else {
-          this.periodicElementService.createElement(result)
-            .subscribe((data: PeriodicElement) => {
+          this.userService.createUser(result)
+            .subscribe((data: User) => {
               this.dataSource.push(data);
               this.table.renderRows();
             })
@@ -68,14 +63,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  deleteElement(id: number): void {
-    this.periodicElementService.deleteElement(id)
+  deleteUser(id: number): void {
+    this.userService.deleteUser(id)
       .subscribe(() => {
         this.dataSource = this.dataSource.filter(value => value.id !== id)
       })
   }
 
-  editElement(element: PeriodicElement): void {
-    this.openDialog(element)
+  editUser(user: User): void {
+    this.openDialog(user)
   }
+
 }
