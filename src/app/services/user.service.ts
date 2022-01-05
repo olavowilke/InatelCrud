@@ -20,11 +20,11 @@ export class UserService {
   }
 
   editUser(element: User): Observable<User> {
-    return this.http.put<User>(this.crudApiUrl, element);
+    return this.http.put<User>(`${this.crudApiUrl}/${element.id}`, element);
   }
 
-  deleteUser(id: number): Observable<any> {
-    return this.http.delete(`${this.crudApiUrl}?id=${id}`);
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(`${this.crudApiUrl}/delete/${id}`);
   }
 
 }
