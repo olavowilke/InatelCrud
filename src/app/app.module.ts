@@ -18,6 +18,7 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {UserService} from "./services/user.service";
+import { WelcomeComponent } from './views/welcome/welcome.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {UserService} from "./services/user.service";
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    UserDialogComponent
+    UserDialogComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,
